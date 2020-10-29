@@ -96,7 +96,6 @@ function formatTrade(dt) {
 function MergeTradewithPrice() {
 
     var index = 0;
-    debugger
     trades.forEach(trade => {
         var tradeDate = new Date(trade.date);
         var len = prices.length;
