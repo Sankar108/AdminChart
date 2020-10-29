@@ -109,7 +109,7 @@ function MergeTradewithPrice() {
             prices[filterPrice.id].direction = trade.direction;
             prices[filterPrice.id].side = trade.side;
             prices[filterPrice.id].tradeSymbol = trade.symbol;
-            console.log('index', filterPrice.id)
+            // console.log('index', filterPrice.id)
         }
     });
     hideLoader();
@@ -144,7 +144,7 @@ function redraw() {
     var nested = d3.nest()
         .key(function (d) { return d.symbol; })
         .map(prices)
-    console.log('nested', nested)
+    // console.log('nested', nested)
     var keys = Object.keys(nested);
 
     if ($("#symbolList").html() === "") {
@@ -178,7 +178,7 @@ function redraw() {
         };
     });
 
-    console.log('linedata', linedata);
+    // console.log('linedata', linedata);
     var lastvalues = [];
     //setup the x and y scales
     var x = d3.time.scale()
@@ -401,7 +401,7 @@ function redraw() {
             .attr("class", "line")
             .attr("d", function (d) { return line(d.values) });
     }
-    console.log('data', data)
+    // console.log('data', data)
 
     $(".symbol2").remove();
     var tradeData = data;
