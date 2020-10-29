@@ -414,10 +414,10 @@ function redraw() {
         .attr("xlink:href", function (d, i) {
             var symbolType = "";
             if (d.side === "BUY") {
-                symbolType = "/images/UpArrow.png"
+                symbolType = "images/UpArrow.png"
             }
             else if (d.side === "SELL") {
-                symbolType = "/images/DownArrow.png"
+                symbolType = "images/DownArrow.png"
             }
             return symbolType;
         })
