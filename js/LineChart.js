@@ -8,7 +8,7 @@ function hideLoader() {
 
 var margin = { top: 50, right: 160, bottom: 80, left: 50 },
     width = 1300 - margin.left - margin.right,
-    height =500 - margin.top - margin.bottom;
+    height = 500 - margin.top - margin.bottom;
 
 d3.select('#dek').style('width', width + 'px');
 d3.select('#headline').style('width', width + 'px');
@@ -95,15 +95,21 @@ function formatTrade(dt) {
 
 function MergeTradewithPrice() {
 
-    var index = 0;
     trades.forEach(trade => {
         var tradeDate = new Date(trade.date);
         var len = prices.length;
-
-        var filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < 10) && (trade.symbol === p.symbol))
+        var closeminute = 10;
+        var filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         if (filterPrices.length === 0) {
-            filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < 30) && (trade.symbol === p.symbol))
+            closeminute=20;
+            filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         }
+        else if (filterPrices.length === 0) {
+            closeminute=30;
+            filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
+        }
+        console.log('closeminute',closeminute);
+        console.log('filterPrices',filterPrices);
         if (filterPrices.length > 0) {
             filterPrice = filterPrices[0];
             prices[filterPrice.id].direction = trade.direction;
@@ -201,8 +207,8 @@ function redraw() {
 
     var zoom = d3.behavior.zoom()
         .x(x)
-        .y(y)
-        .scaleExtent([1, 8])
+        // .y(y)
+        .scaleExtent([1, 15])
         .on("zoom", zoomed);
 
     svg.call(zoom);
