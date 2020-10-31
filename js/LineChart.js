@@ -25,10 +25,11 @@ var maketip = function (d) {
 var maketip2 = function (d) {
     var tip2 = "";
     if (d.direction) {
-        tip2 = d.direction + ', ' + d.side + ', ' + d.symbol + ', ' + d.close;
+        tip2 = "<p class='tip3'>" + d.symbol + ', ' + d.close + "</p>";
+        tip2 = tip2+"<p class='tip3'>" + d.direction + ', ' + d.side + "</p>";
         var dt = new Date(d.date);
         var dateText = dt.getDate() + "/" + dt.getMonth() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes();;
-        tip2 = tip2 + ", " + dateText;
+        tip2 = tip2 + "<p class='tip3'>" + dateText+"</p>";
     }
     return tip2;
 }
@@ -101,15 +102,15 @@ function MergeTradewithPrice() {
         var closeminute = 10;
         var filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         if (filterPrices.length === 0) {
-            closeminute=20;
+            closeminute = 20;
             filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         }
         else if (filterPrices.length === 0) {
-            closeminute=30;
+            closeminute = 30;
             filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         }
-        console.log('closeminute',closeminute);
-        console.log('filterPrices',filterPrices);
+        console.log('closeminute', closeminute);
+        console.log('filterPrices', filterPrices);
         if (filterPrices.length > 0) {
             filterPrice = filterPrices[0];
             prices[filterPrice.id].direction = trade.direction;
@@ -300,9 +301,7 @@ function redraw() {
         .attr("cy", function (d, i) { return y(d.value) })
         .attr("r", 12)
         .style('opacity', 1e-6)//1e-6
-        .attr("title", maketip);
-
-
+        .attr("title", maketip)
 
     //append the legend
     var legend = svg.selectAll('.legend')
@@ -428,7 +427,7 @@ function redraw() {
         })
         .attr("class", "symbol2")
         .attr("x", function (d, i) {
-            return x(d.date) + 15;
+            return x(d.date) - 15;
         })
         .attr("y", function (d, i) {
             var ys = d.side === "BUY" ? -15 : 15;
@@ -437,6 +436,22 @@ function redraw() {
         .attr("title", maketip2)
 
     $('.symbol2').tipsy({ opacity: .9, gravity: 'n', html: true });
+
+
+    // g.append('svg:circle')
+    //     .attr('cx', function () { return x(j.timestamp._d); })
+    //     .attr('cy', function () { return y(j.value); })
+    //     .attr('r', 4)
+    //     .attr('stroke', ML.colors.array[i])
+    //     .attr('stroke-width', 2)
+    //     .attr('fill', '#ffffff')
+    //     .attr('class', 'circle-markers')
+    //     .attr('data-index', k)
+    //     .on('mouseover', function () {
+    //         $(this).attr('fill', ML.colors.array[i]);
+    //     }).on('mouseout', function () {
+    //         $(this).attr('fill', '#ffffff');
+    //     });
     // var legendUpdate = d3.transition(legend);
     // legendUpdate.select("circle")
     // 	.attr('cy', function (d, i) {

@@ -82,7 +82,8 @@ fill: #fff;
 	font-family: SourceSansPro-ExtraLight;
 	font-size: 10pt;
 	text-align: center; 
-	margin-bottom:0px; 
+	margin-bottom:0px;
+	margin-top:5px; 
 	}	
 @font-face {
   font-family: 'SourceSansPro-ExtraLight';
