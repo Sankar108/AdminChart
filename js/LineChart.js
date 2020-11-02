@@ -26,10 +26,10 @@ var maketip2 = function (d) {
     var tip2 = "";
     if (d.direction) {
         tip2 = "<p class='tip3'>" + d.symbol + ', ' + d.close + "</p>";
-        tip2 = tip2+"<p class='tip3'>" + d.direction + ', ' + d.side + "</p>";
+        tip2 = tip2 + "<p class='tip3'>" + d.direction + ', ' + d.side + "</p>";
         var dt = new Date(d.date);
         var dateText = dt.getDate() + "/" + dt.getMonth() + "/" + dt.getFullYear() + " " + dt.getHours() + ":" + dt.getMinutes();;
-        tip2 = tip2 + "<p class='tip3'>" + dateText+"</p>";
+        tip2 = tip2 + "<p class='tip3'>" + dateText + "</p>";
     }
     return tip2;
 }
@@ -109,8 +109,6 @@ function MergeTradewithPrice() {
             closeminute = 30;
             filterPrices = prices.filter(p => ((Math.abs(new Date(p.date) - tradeDate) / 60000) < closeminute) && (trade.symbol === p.symbol))
         }
-        console.log('closeminute', closeminute);
-        console.log('filterPrices', filterPrices);
         if (filterPrices.length > 0) {
             filterPrice = filterPrices[0];
             prices[filterPrice.id].direction = trade.direction;
@@ -219,6 +217,7 @@ function redraw() {
         .orient("bottom")
         .tickPadding(8)
         .ticks(xscaleticks);
+        
 
     svg.append("svg:g")
         .attr("class", "x axis");
@@ -387,9 +386,19 @@ function redraw() {
     $('circle').tipsy({ opacity: .9, gravity: 'n', html: true });
 
     function zoomed() {
-        svg.select(".x.axis").call(xAxis);
+        var xx = svg.select(".x.axis").call(xAxis);
         svg.select(".y.axis").call(yAxis);
 
+        var dataXrange = d3.extent(linedata[0].values, function(d) { return d.date; });
+        // var dataYrange = [0, d3.max(linedata[0].values, function(d) { return d.value; })];
+        // var x = d3.time.scale().domain([
+        //     d3.min(linedata, function (c) { return d3.min(c.values, function (v) { return v.date; }); }),
+        //     d3.max(linedata, function (c) { return d3.max(c.values, function (v) { return v.date; }); })
+        // ])
+        // .range([0, width]);
+        // var xScale = d3.time.scale().domain(d3.extent(dataXrange));
+        
+        console.log('linedata',linedata);
         svg.selectAll(".tipcircle")
             .attr("cx", function (d, i) { return x(d.date) })
             .attr("cy", function (d, i) {
