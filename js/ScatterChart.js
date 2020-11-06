@@ -147,7 +147,8 @@ function DisplayTableData(data) {
         var tableHeader = "<tr>";
         var tableHeaders = Object.keys(tradeData[0]);
         for (var i = 0; i < tableHeaders.length; i++) {
-            tableHeader += "<th>" + tableHeaders[i] + "</th>";
+            if (tableHeaders[i] === "price")
+                tableHeader += "<th>name</th><th>" + tableHeaders[i] + "</th>";
         }
         tableHeader = tableHeader + "</tr>";
 
@@ -156,7 +157,8 @@ function DisplayTableData(data) {
             var tableRow = "<tr>";
             for (var j = 0; j < tableHeaders.length; j++) {
                 var keyName = tableHeaders[j];
-                tableRow += "<td>" + tradeData[i][keyName] + "</td>";
+                if (keyName === "price")
+                    tableRow += "<td>" + data.col0 + "</td><td>" + tradeData[i][keyName] + "</td>";
             }
             tableRow = tableRow + "</tr>";
             tableRows = tableRows + tableRow;
@@ -173,14 +175,12 @@ function DisplayTableData(data) {
 function DrawLineChart(tradeData, dataID) {
     $("#lineChart").empty();
 
-    var margin = { top: 20, right: 50, bottom: 30, left: 70 },
-        width = 1100 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    var margin = { top: 20, right: 30, bottom: 50, left: 60 },
+        width = 900 - margin.left - margin.right,
+        height = 450 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%m/%d/%y").parse;
     var formatDate = d3.time.format("%b %d, '%y");
-    var prices = [];
-    var trades = [];
 
     var bluescale4 = ["#8BA9D0", "#6A90C1", "#066CA9", "#004B8C"];
     var color = d3.scale.ordinal().range(bluescale4);
@@ -236,20 +236,21 @@ function DrawLineChart(tradeData, dataID) {
 
         // console.log('linedata', linedata);
         var lastvalues = [];
-        //setup the x and y scales
-        var x = d3.time.scale()
-            .domain([
-                d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.date; }); }),
-                d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.date; }); })
-            ])
-            .range([0, width]);
 
-        var y = d3.scale.linear()
-            .domain([
-                d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.value; }); }),
-                d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.value; }); })
-            ])
-            .range([height, 0]);
+        //setup the x and y scales
+        // minDT = new Date(minDT.setDate(minDT.getDate() - 5));
+        var minX = d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.date; }); });
+        var maxX = d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.date; }); });
+        var minY = d3.min(linedata, function(c) { return d3.min(c.values, function(v) { return v.value; }); });
+        var maxY = d3.max(linedata, function(c) { return d3.max(c.values, function(v) { return v.value; }); });
+
+        console.log(minX, maxX, minY, maxY)
+        var extentValue = (maxY - minY) / 20;
+        minY = minY - extentValue;
+        maxY = maxY + extentValue;
+
+        var x = d3.time.scale().domain([minX, maxX]).range([10, (width - 10)]);
+        var y = d3.scale.linear().domain([minY, maxY]).range([height, 0]);
 
         var line = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -350,6 +351,9 @@ function DrawLineChart(tradeData, dataID) {
             .attr("cy", function(d, i) { return y(d.value) })
             .attr("r", 3)
             .style('opacity', 1) //1e-6
+            .style('fill', function(d) {
+                return d.type === "OPEN" ? "#208620" : "#f00";
+            })
             .attr("title", maketip)
             .on("mouseover", function(d) {
                 d3.select(this).attr("r", 5);
