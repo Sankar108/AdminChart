@@ -207,6 +207,7 @@ function DrawLineChart(tradeData, dataID) {
         .append("svg:rect")
         .attr("x", 0)
         .attr("y", 0)
+        .style("stroke-width", 5)
         .attr("width", width)
         .attr("height", height);
 
@@ -391,6 +392,6 @@ function DrawLineChart(tradeData, dataID) {
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values) });
         }
-        // console.log('data', data)
+        $(document).scrollTop(500);
     }
 }
